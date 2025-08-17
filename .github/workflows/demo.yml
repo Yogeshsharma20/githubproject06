@@ -12,6 +12,12 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4   # latest version
 
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: dependencies-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install dependencies
         run: npm ci
 
@@ -30,14 +36,14 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: dependencies-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build website
         run: npm run build
@@ -64,6 +70,15 @@ jobs:
         with:
           name: website-artifacts
           path: ./dist
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: dependencies-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: List artifact contents
         run: ls -R ./dist
