@@ -62,6 +62,6 @@ jobs:
       - name: List artifact contents
         run: ls -R ./dist
       - name: output-file
-        run: echo "${ { needs.build.outputs.scripts-files } }"
+        run: echo "${{ needs.build.outputs.scripts-files }}"
       - name: Deploy
         run: echo "🚀 Deploying..."
