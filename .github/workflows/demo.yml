@@ -25,14 +25,20 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      scripts-files: ${{ steps.publish.outputs.scripts-file }}
+      scripts-file: ${{ steps.publish.outputs.scripts-file }}
     steps:
       - name: Get code
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: npm ci
-      
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: dependencies-${{ hashFiles('**/package-lock.json') }}
+
       - name: Build website
         run: npm run build
 
@@ -61,7 +67,9 @@ jobs:
 
       - name: List artifact contents
         run: ls -R ./dist
+
       - name: output-file
-        run: echo "${{ needs.build.outputs.scripts-files }}"
+        run: echo "${{ needs.build.outputs.scripts-file }}"
+
       - name: Deploy
         run: echo "🚀 Deploying..."
